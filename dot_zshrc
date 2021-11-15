@@ -88,7 +88,6 @@ plugins=(
   composer
   npm
   emoji
-  gradle-completion
 )
 
 source $ZSH/oh-my-zsh.sh
