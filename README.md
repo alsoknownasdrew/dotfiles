@@ -1,5 +1,3 @@
-⚠️ Warning: This is still a work in progress, don't actually use it 
-
 # Dotfiles
 
 Managed by [chezmoi](https://www.chezmoi.io/)

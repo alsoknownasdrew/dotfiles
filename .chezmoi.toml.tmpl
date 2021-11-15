@@ -1,0 +1,19 @@
+# try to re-use the existing $name and $email variables and fallback to `promptString` only if they are not set
+
+{- $name := "" -}}
+{{- if (hasKey . "name") -}}
+{{-   $name = .name -}}
+{{- else -}}
+{{-   $name = promptString "name" -}}
+{{- end -}}
+
+{{- $email := "" -}}
+{{- if (hasKey . "email") -}}
+{{-   $email = .email -}}
+{{- else -}}
+{{-   $email = promptString "email" -}}
+{{- end -}}
+
+[data]
+    name = {{ .name | quote }}
+    email = {{ $email | quote }}
