@@ -1,6 +1,6 @@
 # try to re-use the existing $name and $email variables and fallback to `promptString` only if they are not set
 
-{- $name := "" -}}
+{{- $name := "" -}}
 {{- if (hasKey . "name") -}}
 {{-   $name = .name -}}
 {{- else -}}
