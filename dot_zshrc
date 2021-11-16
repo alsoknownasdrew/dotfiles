@@ -7,6 +7,7 @@ fi
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH="/usr/local/opt/ruby/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -107,6 +108,10 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-16.jdk/Contents/
 #   export EDITOR='mvim'
 # fi
 export EDITOR='vim'
+
+# For compilers to find ruby
+export LDFLAGS="-L/usr/local/opt/ruby/lib"
+export CPPFLAGS="-I/usr/local/opt/ruby/include"
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
