@@ -1,6 +1,6 @@
 # Dotfiles
 
-Managed by [chezmoi](https://www.chezmoi.io/)
+My macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/)
 
 ## Set up
 
