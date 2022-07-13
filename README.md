@@ -7,8 +7,7 @@ My macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/)
 Install and init chezmoi
 
 ```sh
-sh -c "$(curl -fsLS git.io/chezmoi)"
-chezmoi init https://github.com/alsoknownasdrew/dotfiles.git
+sh -c "$(curl -fsLS chezmoi.io/get)" -- init --apply alsoknownasdrew
 ```
 
 Check the changes before applying them
