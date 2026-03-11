@@ -22,7 +22,7 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 ###############################################################################
 
 # Set dock icon size
-defaults write com.apple.dock tilesize -int 47
+defaults write com.apple.dock tilesize -int 50
 
 # Auto-hide the Dock
 defaults write com.apple.dock autohide -bool true
