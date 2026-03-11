@@ -1,0 +1,8 @@
+{
+    "workbench.startupEditor": "none",
+    "workbench.colorTheme": "Dracula Theme",
+    "files.autoSave": "afterDelay",
+    "security.workspace.trust.untrustedFiles": "open",
+    "claudeCode.preferredLocation": "sidebar",
+    "python.analysis.typeCheckingMode": "basic"
+}

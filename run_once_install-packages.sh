@@ -1,50 +1,60 @@
 #!/bin/bash
 
-echo "Installing Homebrew..."
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+set -e
+
+# Install Homebrew if not present
+if ! command -v brew &>/dev/null; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    # Add Homebrew to PATH for Apple Silicon
+    if [[ $(uname -m) == "arm64" ]]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+fi
 
 echo "Installing Homebrew packages..."
 brew bundle --no-lock --file=/dev/stdin <<EOF
-tap "homebrew/bundle"
-tap "homebrew/cask"
-tap "homebrew/core"
+# Formulae
+brew "awscli"
 brew "chezmoi"
-brew "docker"
-brew "cmake"
+brew "fastfetch"
+brew "gh"
 brew "git"
 brew "git-lfs"
 brew "helm"
-brew "kind"
+brew "k6"
 brew "kubectl"
-brew "neofetch"
-brew "node"
-cask "alfred"
+brew "libpq"
+brew "neovim"
+brew "nvm"
+brew "pnpm"
+brew "python@3.12"
+
+# Casks
+cask "adobe-creative-cloud"
 cask "amethyst"
-cask "discord"
+cask "calibre"
+cask "claude-code"
 cask "firefox"
-cask "google-chrome"
-cask "google-drive"
-cask "iterm2"
-cask "keepassxc"
-cask "lens"
+cask "ghostty"
 cask "libreoffice"
-cask "mongodb-compass"
+cask "notion"
 cask "obsidian"
-cask "postman"
+cask "raycast"
 cask "slack"
 cask "spotify"
 cask "stats"
-cask "telegram"
-cask "toggl-track"
+cask "steam"
 cask "visual-studio-code"
 cask "vlc"
 cask "zoom"
 EOF
 
-printf "TODO:\n\
-install: \n\
-Logi Options (https://www.logitech.com/en-us/product/options) \n\
-Logi Capture (https://www.logitech.com/en-us/product/capture) \n\
-\n\
-Log in everywhere!\n\
-"
+# Setup NVM directory
+mkdir -p "$HOME/.nvm"
+
+# Setup git-lfs
+git lfs install
+
+echo "Homebrew packages installed."

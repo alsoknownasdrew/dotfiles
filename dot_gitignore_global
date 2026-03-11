@@ -32,5 +32,11 @@
 ehthumbs.db
 Thumbs.db
 
+# IDE #
+#######
 .idea
 */.idea
+
+# AI #
+######
+.claude
