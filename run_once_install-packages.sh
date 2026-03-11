@@ -16,6 +16,7 @@ fi
 echo "Installing Homebrew packages..."
 brew bundle --no-lock --file=/dev/stdin <<EOF
 # Formulae
+brew "awscli"
 brew "chezmoi"
 brew "fastfetch"
 brew "gh"
