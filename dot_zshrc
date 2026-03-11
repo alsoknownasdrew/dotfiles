@@ -1,6 +1,5 @@
 # Path
 export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH="/usr/local/opt/ruby/bin:$PATH"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 # Path to your oh-my-zsh installation.
@@ -33,10 +32,6 @@ export LANG=en_US.UTF-8
 
 # Editor
 export EDITOR='vim'
-
-# For compilers to find ruby
-export LDFLAGS="-L/usr/local/opt/ruby/lib"
-export CPPFLAGS="-I/usr/local/opt/ruby/include"
 
 # Aliases
 alias dc="docker-compose"
