@@ -31,7 +31,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '\\e]777;notify;Claude Code;%s\\a' \"$CLAUDE_NOTIFICATION_MESSAGE\""
+            "command": "printf '\\e]9;%s\\a' \"$CLAUDE_NOTIFICATION_MESSAGE\""
           }
         ]
       }
@@ -41,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "printf '\\e]777;notify;Claude Code;Waiting for your input\\a'"
+            "command": "printf '\\e]9;Waiting for your input\\a'"
           }
         ]
       }
