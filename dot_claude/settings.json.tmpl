@@ -25,6 +25,26 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\e]777;notify;Claude Code;%s\\a' \"$CLAUDE_NOTIFICATION_MESSAGE\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "printf '\\e]777;notify;Claude Code;Waiting for your input\\a'"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
