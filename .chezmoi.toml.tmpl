@@ -12,6 +12,14 @@
 {{-   $email = promptString "email" -}}
 {{- end -}}
 
+{{- $personal := false -}}
+{{- if (hasKey . "personal") -}}
+{{-   $personal = .personal -}}
+{{- else -}}
+{{-   $personal = promptBool "Is this a personal machine" -}}
+{{- end }}
+
 [data]
     name = {{ $name | quote }}
     email = {{ $email | quote }}
+    personal = {{ $personal }}

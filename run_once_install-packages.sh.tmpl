@@ -32,23 +32,27 @@ brew "pnpm"
 brew "python@3.12"
 
 # Casks
-cask "adobe-creative-cloud"
 cask "amethyst"
-cask "calibre"
 cask "claude-code"
 cask "firefox"
 cask "ghostty"
-cask "libreoffice"
 cask "notion"
-cask "obsidian"
 cask "raycast"
 cask "slack"
-cask "spotify"
 cask "stats"
-cask "steam"
 cask "visual-studio-code"
-cask "vlc"
 cask "zoom"
+
+{{ if .personal -}}
+# Personal casks
+cask "adobe-creative-cloud"
+cask "calibre"
+cask "libreoffice"
+cask "obsidian"
+cask "spotify"
+cask "steam"
+cask "vlc"
+{{ end -}}
 EOF
 
 # Setup NVM directory
