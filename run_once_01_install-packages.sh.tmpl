@@ -14,7 +14,7 @@ if ! command -v brew &>/dev/null; then
 fi
 
 echo "Installing Homebrew packages..."
-brew bundle --no-lock --file=/dev/stdin <<EOF
+brew bundle --file=/dev/stdin <<EOF
 # Formulae
 brew "awscli"
 brew "chezmoi"
