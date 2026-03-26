@@ -158,10 +158,26 @@ Each agent should run `git diff main...HEAD -- src/ test/` to see the full PR di
 
 Do these in parallel — they are independent:
 
-**Minimize all comments except the latest:**
+**Minimize all outdated feedback across all three endpoints:**
+
+GitHub's `minimizeComment` GraphQL mutation works on any comment-like node (issue comments, PR reviews, and inline review comments) — use the same mutation for all three. Minimize everything except the latest entry from each endpoint.
+
 ```bash
+# 1. Issue comments — minimize all except the latest
 gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
   --jq '.[:-1] | .[].node_id' | while read nid; do
+  gh api graphql -f query="mutation { minimizeComment(input: {subjectId: \"$nid\", classifier: OUTDATED}) { minimizedComment { isMinimized } } }" --silent
+done
+
+# 2. PR reviews — minimize all non-empty reviews except the latest
+gh api repos/{owner}/{repo}/pulls/{pr_number}/reviews \
+  --jq '[.[] | select(.body != "" and .body != null) | .node_id] | .[:-1] | .[]' | while read nid; do
+  gh api graphql -f query="mutation { minimizeComment(input: {subjectId: \"$nid\", classifier: OUTDATED}) { minimizedComment { isMinimized } } }" --silent
+done
+
+# 3. Inline review comments — minimize all except the latest
+gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+  --jq '[.[] | .node_id] | .[:-1] | .[]' | while read nid; do
   gh api graphql -f query="mutation { minimizeComment(input: {subjectId: \"$nid\", classifier: OUTDATED}) { minimizedComment { isMinimized } } }" --silent
 done
 ```
@@ -177,6 +193,7 @@ git push origin <branch-name>
 - **Forgetting node_id** — the GraphQL `minimizeComment` mutation needs the `node_id`, not the numeric `id`
 - **Amending commits instead of atomic** — each fix must be its own commit for clear review history
 - **Sending dependent fixes to separate worktrees** — if two fixes touch the same file, they must be sequenced (same agent or main context)
+- **Only minimizing issue comments** — the `minimizeComment` mutation works on PR reviews and inline comments too. You must minimize outdated entries from all three endpoints (`/issues/.../comments`, `/pulls/.../reviews`, `/pulls/.../comments`), not just issue comments. Forgetting PR reviews leaves a wall of stale bot reviews cluttering the PR.
 - **Minimizing the latest comment** — only minimize comments *before* the one you're addressing
 - **Skipping the deep review** — this is the most important step; without it you push fixes that create new review comments, looping indefinitely
 - **Skipping the final test run** — always run the full suite after applying all worktree results, even if agents tested individually
