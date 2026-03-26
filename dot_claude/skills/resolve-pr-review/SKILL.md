@@ -162,6 +162,8 @@ Do these in parallel — they are independent:
 
 GitHub's `minimizeComment` GraphQL mutation works on any comment-like node (issue comments, PR reviews, and inline review comments) — use the same mutation for all three. Minimize everything except the latest entry from each endpoint.
 
+**Important GitHub UI behavior:** Minimized issue comments are fully hidden (expandable). Minimized PR reviews are shown as collapsed "This comment was marked as outdated" sections — GitHub does **not** fully hide reviews the way it hides comments. This is a platform limitation; the minimization is still applied correctly (verified via `isMinimized: true` in GraphQL). Tell the user this is expected if they ask why reviews still appear collapsed on the PR page.
+
 ```bash
 # 1. Issue comments — minimize all except the latest
 gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
