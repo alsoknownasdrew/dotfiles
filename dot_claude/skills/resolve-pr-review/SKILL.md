@@ -32,21 +32,49 @@ digraph resolve {
 }
 ```
 
-## Step 1: Identify PR and Latest Comment
+## Step 1: Identify PR and Latest Review Feedback
+
+GitHub stores review feedback in **three separate locations**. You must check all three to find the latest review:
 
 ```bash
 # Get PR for current branch
 gh pr view --json number,title,url,headRefName
 
-# Get all issue comments with node_ids (needed for GraphQL minimization)
+# 1. Issue comments — top-level PR comments (e.g., manual "Code Review" posts)
 gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
-  --jq '.[] | {id, node_id, body: (.body | split("\n")[0][:100])}'
+  --jq '.[] | {id, node_id, type: "issue_comment", created_at: .created_at, user: .user.login, body: (.body | split("\n")[0][:100])}'
 
-# The latest comment is the one to address
-gh pr view {number} --json comments --jq '.comments[-1].body'
+# 2. PR reviews — review bodies submitted via GitHub's review UI or bots
+#    These have a separate API endpoint and are often missed!
+gh api repos/{owner}/{repo}/pulls/{pr_number}/reviews \
+  --jq '.[] | select(.body != "" and .body != null) | {id, node_id, type: "review", state: .state, submitted_at: .submitted_at, user: .user.login, body: (.body | split("\n")[0][:100])}'
+
+# 3. Inline review comments — line-level annotations on specific files
+gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+  --jq '.[] | {id, node_id, type: "inline_comment", created_at: .created_at, user: .user.login, path: .path, body: (.body | split("\n")[0][:100])}'
 ```
 
-**Important:** Use `gh api repos/.../issues/.../comments` (not `gh api repos/.../pulls/.../comments`) — issue comments are top-level PR comments. Pull comments are inline review comments on specific lines.
+**Determine the latest review to address:** Compare timestamps across all three sources. The most recent non-bot, non-status-update entry is the one to address. Filter out:
+- Bot status comments (e.g., "Claude finished @user's task")
+- Dismissed or retracted reviews
+- Your own automated comments
+
+**Fetch the full body** of the identified review:
+```bash
+# For issue comments:
+gh api repos/{owner}/{repo}/issues/{pr_number}/comments/{comment_id} --jq '.body'
+
+# For PR reviews:
+gh api repos/{owner}/{repo}/pulls/{pr_number}/reviews/{review_id} --jq '.body'
+
+# For inline comments:
+gh api repos/{owner}/{repo}/pulls/{pr_number}/comments/{comment_id} --jq '.body'
+```
+
+**Important:** The three GitHub API endpoints for PR feedback:
+- `issues/{pr}/comments` — top-level PR comments
+- `pulls/{pr}/reviews` — review submissions (the body written when submitting a review)
+- `pulls/{pr}/comments` — inline review comments on specific lines/files
 
 ## Step 2: Categorize and Group Issues
 
@@ -145,7 +173,7 @@ git push origin <branch-name>
 
 ## Common Mistakes
 
-- **Using pulls endpoint instead of issues endpoint** — top-level PR comments are issue comments, not pull review comments
+- **Only checking issue comments** — GitHub stores review feedback in THREE places: issue comments (`/issues/.../comments`), PR reviews (`/pulls/.../reviews`), and inline review comments (`/pulls/.../comments`). You must check all three or you will miss reviews submitted via GitHub's review UI or by bots that post review bodies. This is the most common cause of "no new review to address" false negatives.
 - **Forgetting node_id** — the GraphQL `minimizeComment` mutation needs the `node_id`, not the numeric `id`
 - **Amending commits instead of atomic** — each fix must be its own commit for clear review history
 - **Sending dependent fixes to separate worktrees** — if two fixes touch the same file, they must be sequenced (same agent or main context)
